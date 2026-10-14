@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aprendendo Libras</title>
+
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <section class="login-card">
+
+            <h1> Aprendendo Libras/ projeto faci</h1>
+
+            <p>Aprenda Libras de forma interativa.</p>
+
+            <form action="{{ url_for('login') }}" method="POST">
+
+                <label for="usuario">Nome de usuário</label>
+                <input
+                    type="text"
+                    id="usuario"
+                    name="nome_usuario"
+                    placeholder="Digite seu usuário"
+                    required
+                >
+
+                <label for="senha">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Digite sua senha"
+                    required
+                >
+
+                <button type="submit">
+                    Entrar
+                </button>
+
+            </form>
+
+            <p class="cadastro">
+                Ainda não possui uma conta?
+                <a href="{{ url_for('cadastro') }}">Criar conta</a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

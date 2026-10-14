@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #79b1f0;
+}
+
+.login-container {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+
+    background: rgb(192, 227, 247);
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 20px rgba(68, 116, 247, 0.705);
+}
+
+.login-card h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #3b3b3b;
+}
+
+.login-card > p {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #3b3b3b;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    color: #3b3b3b;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    padding: 12px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    font-size: 16px;
+}
+
+button {
+    padding: 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #4091ee;
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0256b6;
+}
+
+.cadastro {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.cadastro a {
+    color: #318cf3;
+    font-weight: bold;
+}
+
+
+.home-container {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.home-card {
+    width: 100%;
+    max-width: 700px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+    text-align: center;
+}
+
+.home-card h1 {
+    margin-bottom: 20px;
+}
+
+.home-card h2 {
+    margin-bottom: 10px;
+}
+
+.home-card p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.home-menu {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 30px;
+}
+
+.home-menu a {
+    padding: 25px 15px;
+
+    background: #f1f1f1;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    color: #222;
+
+    font-weight: bold;
+}
+
+.home-menu a:hover {
+    background: #ddd;
+}
+
+.logout {
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    background: #333;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+}
+
+.logout:hover {
+    background: #555;
+}

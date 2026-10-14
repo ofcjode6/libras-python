@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Início - Aprendendo Libras</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/estilo.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <main class="home-container">
+
+        <section class="home-card">
+
+            <h1>🤟 Aprendendo Libras</h1>
+
+            <h2>
+                Olá, {{ nome_usuario }}!
+            </h2>
+
+            <p>
+                Bem-vindo à plataforma de aprendizado de Libras.
+            </p>
+
+            <div class="home-menu">
+
+                <a href="#">
+                    📚 Conteúdos
+                </a>
+
+                <a href="#">
+                    📝 Exercícios
+                </a>
+
+                <a href="#">
+                    📊 Meu desempenho
+                </a>
+
+            </div>
+
+            <a
+                class="logout"
+                href="{{ url_for('logout') }}"
+            >
+                Sair
+            </a>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
