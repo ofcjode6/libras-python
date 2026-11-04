@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Conheça a Libras</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+    <main class="informacoes-container">
+
+        <header class="informacoes-cabecalho">
+            <span class="informacoes-icone"></span>
+            <h1>Conheça a Libras</h1>
+
+            <p>
+                Descubra a história, os direitos, as características
+                e a importância da Língua Brasileira de Sinais.
+            </p>
+        </header>
+
+        <section class="informacoes-grade">
+
+            <article class="informacao-card">
+                <span class="informacao-icone">📚</span>
+                <h2>O que é Libras?</h2>
+
+                <p>
+                    A Língua Brasileira de Sinais (Libras) é uma língua
+                    visual-motora utilizada na comunicação por muitas
+                    pessoas surdas e por outras pessoas que a conhecem.
+                    Ela possui estrutura gramatical própria e não é
+                    simplesmente uma representação gestual do português.
+                </p>
+            </article>
+
+            <article class="informacao-card">
+                <span class="informacao-icone">🏛️</span>
+                <h2>História e reconhecimento</h2>
+
+                <p>
+                    A história da educação de surdos no Brasil inclui
+                    a criação do Instituto Nacional de Educação de Surdos,
+                    em 1857. Mais tarde, a Lei nº 10.436, de 24 de abril
+                    de 2002, reconheceu a Libras como meio legal de
+                    comunicação e expressão.
+                </p>
+
+                <a href="https://www.gov.br/ines/pt-br"
+                   target="_blank" rel="noopener noreferrer">
+                    Conhecer o INES →
+                </a>
+            </article>
+
+            <article class="informacao-card">
+                <span class="informacao-icone">⚖️</span>
+                <h2>Direitos e inclusão</h2>
+
+                <p>
+                    A legislação brasileira reconhece a importância
+                    da Libras e estabelece medidas relacionadas à sua
+                    utilização e à acessibilidade. Conhecer esses direitos
+                    contribui para uma sociedade mais inclusiva.
+                </p>
+
+                <a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10436.htm"
+                   target="_blank" rel="noopener noreferrer">
+                    Consultar a Lei nº 10.436/2002 →
+                </a>
+
+                <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/decreto/d5626.htm"
+                   target="_blank" rel="noopener noreferrer">
+                    Consultar o Decreto nº 5.626/2005 →
+                </a>
+            </article>
+
+            <article class="informacao-card">
+                <span class="informacao-icone">📊</span>
+                <h2>Libras em números</h2>
+
+                <p>
+                    Para compreender a realidade das pessoas com deficiência
+                    auditiva no Brasil, podemos consultar pesquisas oficiais
+                    do IBGE. É importante diferenciar deficiência auditiva
+                    do número de pessoas que utilizam Libras.
+                </p>
+
+                <p>
+                    Nesta primeira versão, não exibimos uma porcentagem
+                    isolada sem indicar a pesquisa, o ano e a população
+                    considerada.
+                </p>
+
+                <a href="https://www.ibge.gov.br/"
+                   target="_blank" rel="noopener noreferrer">
+                    Consultar dados do IBGE →
+                </a>
+            </article>
+
+        </section>
+
+        <section class="informacoes-linha-tempo">
+            <h2>Marcos históricos</h2>
+
+            <div class="linha-tempo-item">
+                <span class="linha-tempo-ano">1857</span>
+                <div>
+                    <h3>Criação do INES</h3>
+                    <p>
+                        Fundação da instituição que hoje é conhecida como
+                        Instituto Nacional de Educação de Surdos.
+                    </p>
+                </div>
+            </div>
+
+            <div class="linha-tempo-item">
+                <span class="linha-tempo-ano">2002</span>
+                <div>
+                    <h3>Lei nº 10.436</h3>
+                    <p>
+                        Reconhecimento legal da Libras como meio de
+                        comunicação e expressão.
+                    </p>
+                </div>
+            </div>
+
+            <div class="linha-tempo-item">
+                <span class="linha-tempo-ano">2005</span>
+                <div>
+                    <h3>Decreto nº 5.626</h3>
+                    <p>
+                        Regulamentação da Lei de Libras e definição de
+                        disposições relacionadas ao seu uso e ensino.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="informacoes-fontes">
+            <h2>Fontes para continuar aprendendo</h2>
+
+            <ul>
+                <li>
+                    <a href="https://www.gov.br/ines/pt-br"
+                       target="_blank" rel="noopener noreferrer">
+                        Instituto Nacional de Educação de Surdos (INES)
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.ibge.gov.br/"
+                       target="_blank" rel="noopener noreferrer">
+                        Instituto Brasileiro de Geografia e Estatística (IBGE)
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10436.htm"
+                       target="_blank" rel="noopener noreferrer">
+                        Lei nº 10.436/2002
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <a href="{{ url_for('home') }}"
+           class="botao-informacoes">
+            Voltar ao início
+        </a>
+
+    </main>
+
+</body>
+</html>

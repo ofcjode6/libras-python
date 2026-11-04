@@ -1,22 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Início - Aprendendo Libras</title>
+    <title>Início - Aprendendo Libras / projeto faci </title>
 
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/estilo.css') }}"
     >
-
 </head>
 
 <body>
@@ -25,43 +20,97 @@
 
         <section class="home-card">
 
-            <h1>🤟 Aprendendo Libras</h1>
+            <div class="home-cabecalho">
+                <div class="home-logo">
+    <img
+        src="{{ url_for('static', filename='logo_projeto.png') }}"
+        alt="Logo do projeto Aprendendo Libras"
+    >
+            {% if session.get("tipo") == "admin" %}
+            <a href="{{ url_for('admin') }}" class="btn-admin">
+             Painel Administrativo
+            </a>
+            {% endif %}
 
-            <h2>
-                Olá, {{ nome_usuario }}!
-            </h2>
+</div>
 
-            <p>
-                Bem-vindo à plataforma de aprendizado de Libras.
-            </p>
+                <h1>Aprendendo Libras</h1>
 
-            <div class="home-menu">
+                <p class="home-subtitulo">
+                    Aprenda o alfabeto manual de Libras de forma interativa.
+                </p>
+            </div>
 
-                <a href="#">
-                    📚 Conteúdos
-                </a>
-
-                <a href="#">
-                    📝 Exercícios
-                </a>
-
-                <a href="#">
-                    📊 Meu desempenho
-                </a>
+            <div class="home-boas-vindas">
+                <h2>Bem Vindo, {{ nome_usuario }}!</h2>
 
             </div>
 
-            <a
-                class="logout"
-                href="{{ url_for('logout') }}"
-            >
-                Sair
-            </a>
+
+
+            <div class="home-menu">
+
+                <a
+                    href="{{ url_for('conteudos') }}"
+                    class="home-opcao"
+                >
+                    <span class="opcao-icone">📘</span>
+                    <h3>Estudar o alfabeto</h3>
+                    <p>
+                        Conheça as letras em libras de A a Z e os números de 0 a 10.
+                    </p>
+                    <span class="opcao-link">Começar a estudar ➡️</span>
+                </a>
+
+                <a href="{{ url_for('quiz') }}" class="home-opcao">
+    <span class="opcao-icone">📝</span>
+    <h3>Exercícios\ Quiz</h3>
+    <p>
+        Pratique o alfabeto e números, testando seus conhecimentos.
+    </p>
+    <span class="opcao-link">Começar quiz ➡️</span>
+</a>
+
+
+<a href="{{ url_for('historico') }}" class="home-opcao">
+    <span class="opcao-icone">📊</span>
+    <h3>Meu histórico</h3>
+    <p>Consulte suas pontuações e acompanhe sua evolução.</p>
+    <span class="opcao-link">Ver resultados ➡️</span>
+</a>
+
+
+<a href="{{ url_for('ranking') }}" class="home-opcao">
+    <span class="opcao-icone">🏆</span>
+    <h3>Ranking</h3>
+    <p>Confira as melhores pontuações dos participantes.</p>
+    <span class="opcao-link">Ver ranking ➡️</span>
+</a>
+
+<a href="{{ url_for('informacoes') }}" class="home-opcao">
+    <span class="opcao-icone">🔍</span>
+    <h3>Conheça a Libras</h3>
+    <p>Descubra a história, os direitos e curiosidades sobre Libras.</p>
+    <span class="opcao-link">Ver informações ➡️</span>
+</a>
+
+
+            </div>
+
+            <div class="home-rodape">
+                <p>Pequenos passos, grandes aprendizados! </p>
+
+                <a
+                    class="logout"
+                    href="{{ url_for('logout') }}"
+                >
+                    Sair da conta
+                </a>
+            </div>
 
         </section>
 
     </main>
 
 </body>
-
 </html>

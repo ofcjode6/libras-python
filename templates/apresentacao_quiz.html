@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Apresentação dos Exercícios | Aprendendo Libras</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+
+    <style>
+        .apresentacao-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 35px 20px;
+        }
+
+        .apresentacao-card {
+            background: var(--branco);
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px var(--sombra);
+        }
+
+        .apresentacao-cabecalho {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .apresentacao-icone {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .apresentacao-cabecalho h1 {
+            color: var(--azul-escuro);
+            margin-bottom: 10px;
+        }
+
+        .apresentacao-cabecalho p {
+            color: var(--texto-secundario);
+            line-height: 1.7;
+        }
+
+        .apresentacao-card h2 {
+            color: var(--azul-escuro);
+            font-size: 21px;
+            margin: 25px 0 15px;
+        }
+
+        .etapa {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: var(--azul-suave);
+            border-radius: 12px;
+        }
+
+        .etapa-icone {
+            font-size: 27px;
+        }
+
+        .etapa h3 {
+            color: var(--azul-escuro);
+            margin-bottom: 5px;
+        }
+
+        .etapa p {
+            color: var(--texto-secundario);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .regras-lista {
+            padding-left: 22px;
+            color: var(--texto-secundario);
+            line-height: 2;
+        }
+
+        .resumo-atividade {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--azul-suave);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .resumo-atividade strong {
+            display: block;
+            color: var(--azul-escuro);
+            font-size: 24px;
+        }
+
+        .resumo-atividade span {
+            color: var(--texto-secundario);
+            font-size: 13px;
+        }
+
+        .botoes-apresentacao {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .botao-iniciar {
+            display: block;
+            padding: 15px;
+            background: var(--azul);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .botao-iniciar:hover {
+            background: var(--azul-hover);
+        }
+
+        .botao-voltar {
+            text-align: center;
+            color: var(--azul);
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .apresentacao-container {
+                padding: 20px 12px;
+            }
+
+            .apresentacao-card {
+                padding: 22px 18px;
+            }
+
+            .resumo-atividade {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="apresentacao-container">
+
+        <section class="apresentacao-card">
+
+            <header class="apresentacao-cabecalho">
+                <span class="apresentacao-icone"></span>
+
+                <h1>Vamos praticar Libras?</h1>
+
+                <p>
+                    Prepare-se para testar seus conhecimentos
+                    sobre o alfabeto e números da Língua Brasileira
+                    de Sinais!
+                </p>
+            </header>
+
+            <h2>Sobre a atividade</h2>
+
+            <p>
+                Nesta atividade, você encontrará 15 questões
+                divididas em três etapas. Seu objetivo será
+                identificar corretamente as letras do alfabeto
+                manual de Libras por meio de imagens e vídeos.
+            </p>
+
+            <h2>Como funcionará?</h2>
+
+            <div class="etapa">
+                <span class="etapa-icone"></span>
+                <div>
+                    <h3>1ª Etapa — Reconhecimento por imagens</h3>
+                    <p>
+                        5 questões para identificar as letras
+                        representadas nas fotografias.
+                    </p>
+                </div>
+            </div>
+
+            <div class="etapa">
+                <span class="etapa-icone"></span>
+                <div>
+                    <h3>2ª Etapa — Identificação por vídeos</h3>
+                    <p>
+                        5 questões para reconhecer as letras
+                        demonstradas nos vídeos.
+                    </p>
+                </div>
+            </div>
+
+            <div class="etapa">
+                <span class="etapa-icone"></span>
+                <div>
+                    <h3>3ª Etapa — indentificação dos números</h3>
+                    <p>
+                        5 questões sobre os números, com imagens e vídeos.
+                    .
+                    </p>
+                </div>
+            </div>
+
+            <h2>Regras da atividade</h2>
+
+            <ul class="regras-lista">
+                <li>Cada questão possui apenas uma alternativa correta.</li>
+                <li>Cada resposta correta vale 1 ponto.</li>
+                <li>A pontuação máxima é de 15 pontos.</li>
+            </ul>
+
+            <div class="resumo-atividade">
+                <div>
+                    <strong>15</strong>
+                    <span>Questões</span>
+                </div>
+
+                <div>
+                    <strong>3</strong>
+                    <span>Etapas</span>
+                </div>
+
+                <div>
+                    <strong>15</strong>
+                    <span>Pontos possíveis</span>
+                </div>
+            </div>
+
+            <div class="botoes-apresentacao">
+
+                <a href="{{ url_for('iniciar_quiz') }}"
+                   class="botao-iniciar">
+                    Começar atividade →
+                </a>
+
+                <a href="{{ url_for('home') }}"
+                   class="botao-voltar">
+                    Voltar para a página inicial
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

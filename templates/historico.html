@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Resultados</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+    <main class="historico-container">
+        <section class="historico-card">
+
+            <h1>Meu histórico</h1>
+            <p class="historico-descricao">
+                Acompanhe seu desempenho nos exercícios de Libras.
+            </p>
+
+            {% if tentativas %}
+                <div class="historico-lista">
+
+                    {% for tentativa in tentativas %}
+                        {% set aproveitamento =
+                            (tentativa[1] / tentativa[2] * 100)
+                            if tentativa[2] > 0 else 0 %}
+
+                        <article class="historico-item">
+                            <div class="historico-topo">
+                                
+                                <span class="historico-data">
+                                    {{ tentativa[3] }}
+                                </span>
+                            </div>
+
+                            <div class="historico-pontuacao">
+                                <strong>
+                                    {{ tentativa[1] }} / {{ tentativa[2] }}
+                                </strong>
+                                <span>acertos</span>
+                            </div>
+
+                            <div class="historico-progresso">
+                            <progress
+                              class="historico-barra"
+                              value="{{ tentativa[1] }}"
+                              max="{{ tentativa[2] }}">
+                              </progress>
+                            </div>
+
+                            <p class="historico-percentual">
+                                Aproveitamento:
+                                {{ "%.0f"|format(aproveitamento) }}%
+                            </p>
+                        </article>
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <div class="historico-vazio">
+                    <h2>Nenhuma tentativa registrada</h2>
+                    <p>
+                        Quando você concluir um exercício,
+                        seu resultado aparecerá aqui.
+                    </p>
+                </div>
+            {% endif %}
+
+            <a href="{{ url_for('home') }}" class="botao-historico">
+                Voltar ao início
+            </a>
+
+            <a href="{{ url_for('quiz') }}" class="botao-historico secundario">
+                Fazer novo exercício
+            </a>
+
+        </section>
+    </main>
+
+</body>
+</html>

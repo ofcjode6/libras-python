@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Conteúdos - Aprendendo Libras</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/estilo.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="conteudos-container">
+
+        <section class="conteudos-painel">
+
+            <header class="conteudos-cabecalho">
+                <span class="conteudos-icone">📚</span>
+
+                <h1>Área de aprendizagem</h1>
+
+                <p>
+                    Escolha um conteúdo para iniciar seus estudos
+                    e aprender Libras de forma interativa.
+                </p>
+            </header>
+
+            <section class="conteudos-categorias">
+
+                <!-- Categoria: Alfabeto manual -->
+                <article class="conteudo-card">
+
+                    <div class="conteudo-icone">🤟</div>
+
+                    <span class="conteudo-status disponivel">
+                        Disponível
+                    </span>
+
+                    <h2>Alfabeto manual</h2>
+
+                    <p>
+                     Explore o alfabeto de A a Z e aprenda suas
+                     representações em Libras por meio de imagens e vídeos.
+    </p>
+    </p>
+                    </p>
+
+                    <a
+                        href="{{ url_for('alfabeto') }}"
+                        class="conteudo-botao"
+                    >
+                        Começar a estudar 
+                    </a>
+
+                </article>
+
+                
+<!-- Categoria: Números -->
+<article class="conteudo-card">
+
+    <div class="conteudo-icone">🔢</div>
+
+    <span class="conteudo-status disponivel">
+        Disponível
+    </span>
+
+    <h2>Números em Libras</h2>
+
+    <p>
+        Explore os números de 0 a 10 e aprenda suas
+        representações em Libras por meio de imagens e vídeos.
+    </p>
+
+    <a
+        href="{{ url_for('numeros') }}"
+        class="conteudo-botao"
+    >
+        Começe a estudar
+    </a>
+
+</article>
+
+            </section>
+
+            <footer class="conteudos-rodape">
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="conteudo-voltar"
+                >
+                    ⬅️ Voltar para o início
+                </a>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

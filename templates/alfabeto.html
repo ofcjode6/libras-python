@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alfabeto Manual | Aprendendo Libras</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/estilo.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="container pagina-alfabeto">
+
+        <header class="cabecalho-alfabeto">
+            <h1>Alfabeto Manual</h1>
+
+            <p>
+                Explore as letras de A a Z e aprenda a configuração
+                das mãos em Libras por meio dos vídeos.
+            </p>
+        </header>
+
+        <section aria-label="Letras do alfabeto">
+
+            <div class="titulo-carrossel">
+                <h2>Escolha uma letra</h2>
+                <span>Deslize para os lados →</span>
+            </div>
+
+            <div class="controles-carrossel">
+                <button
+                    type="button"
+                    class="botao-navegacao"
+                    onclick="moverCarrossel(-1)"
+                    aria-label="Letras anteriores"
+                >←</button>
+
+                <button
+                    type="button"
+                    class="botao-navegacao"
+                    onclick="moverCarrossel(1)"
+                    aria-label="Próximas letras"
+                >→</button>
+            </div>
+
+            <div
+                id="carrossel-alfabeto"
+                class="carrossel-alfabeto"
+                aria-label="Carrossel de letras"
+            >
+            </div>
+
+        </section>
+
+        <section
+            id="area-estudo"
+            class="area-estudo"
+            hidden
+        >
+            <div class="cabecalho-estudo">
+                <div>
+                    <span class="etiqueta-estudo">MODO DE ESTUDO</span>
+                    <h2 id="titulo-letra">Letra A</h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="botao-fechar"
+                    onclick="fecharEstudo()"
+                >
+                    Fechar ✕
+                </button>
+            </div>
+
+            <p id="texto-letra">
+                Assista ao vídeo e pratique a configuração da mão.
+            </p>
+
+            <div class="video-container">
+                <video
+                    id="video-letra"
+                    controls
+                    playsinline
+                    preload="metadata"
+                >
+                    Seu navegador não suporta a reprodução de vídeo.
+                </video>
+
+                <p id="aviso-video" class="aviso-video" hidden>
+                    O vídeo desta letra ainda não foi adicionado.
+                    Ele estará disponível quando o grupo colocar
+                    o arquivo correspondente na pasta de vídeos.
+                </p>
+            </div>
+
+            <p class="dica-estudo">
+                Dica: assista com atenção, pause se necessário e
+                tente reproduzir o movimento diante de um espelho.
+            </p>
+        </section>
+
+        <a class="voltar-conteudos" href="{{ url_for('conteudos') }}">
+            ⬅️ Voltar aos conteúdos
+        </a>
+
+    </main>
+
+    <script>
+        const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+        const carrossel = document.getElementById("carrossel-alfabeto");
+        const areaEstudo = document.getElementById("area-estudo");
+        const tituloLetra = document.getElementById("titulo-letra");
+        const textoLetra = document.getElementById("texto-letra");
+        const videoLetra = document.getElementById("video-letra");
+        const avisoVideo = document.getElementById("aviso-video");
+
+        // Cria os cartões de A até Z.
+        letras.forEach(function(letra) {
+            const cartao = document.createElement("article");
+            cartao.className = "cartao-letra";
+
+            const imagem = document.createElement("img");
+            imagem.src = "{{ url_for('static', filename='alfabeto/') }}" + letra + ".jpg";
+            imagem.alt = "Imagem ilustrativa da letra " + letra;
+            imagem.className = "imagem-cartao-letra";
+
+            // Esconde a imagem caso o arquivo ainda não exista.
+            imagem.onerror = function() {
+                imagem.hidden = true;
+            };
+
+            const identificacao = document.createElement("span");
+            identificacao.className = "identificacao-letra";
+            identificacao.textContent = "Letra " + letra;
+
+            const botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "botao-estudar";
+            botao.textContent = "Estudar letra " + letra;
+
+            botao.addEventListener("click", function() {
+                mostrarLetra(letra);
+            });
+
+            cartao.appendChild(imagem);
+            cartao.appendChild(identificacao);
+            cartao.appendChild(botao);
+
+            carrossel.appendChild(cartao);
+        });
+
+        // Desliza o carrossel por aproximadamente um cartão.
+        function moverCarrossel(direcao) {
+            const cartao = carrossel.querySelector(".cartao-letra");
+
+            if (!cartao) return;
+
+            const distancia = cartao.getBoundingClientRect().width + 18;
+
+            carrossel.scrollBy({
+                left: distancia * direcao,
+                behavior: "smooth"
+            });
+        }
+
+        // Abre a área de estudo e carrega o vídeo da letra.
+        function mostrarLetra(letra) {
+            tituloLetra.textContent = "Estudando a letra " + letra;
+
+            textoLetra.textContent =
+                "Observe o vídeo da letra " + letra +
+                " e pratique a configuração da mão.";
+
+            // Limpa o vídeo anterior antes de carregar o próximo.
+            videoLetra.pause();
+            videoLetra.removeAttribute("src");
+            videoLetra.load();
+
+            avisoVideo.hidden = true;
+            videoLetra.hidden = false;
+
+            videoLetra.onerror = function() {
+                videoLetra.hidden = true;
+                avisoVideo.hidden = false;
+            };
+
+            videoLetra.src =
+                "{{ url_for('static', filename='videos/alfabeto/') }}" +
+                letra + ".mp4";
+
+            videoLetra.muted = true;
+
+            videoLetra.load();
+
+            areaEstudo.hidden = false;
+
+            areaEstudo.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+        function fecharEstudo() {
+            videoLetra.pause();
+            areaEstudo.hidden = true;
+        }
+    </script>
+
+</body>
+</html>

@@ -15,8 +15,14 @@
     <main class="login-container">
 
         <section class="login-card">
+            <div class="login-logo">
+    <img
+        src="{{ url_for('static', filename='logo_projeto.png') }}"
+        alt="Logo do projeto Aprendendo Libras"
+    >
+</div>
 
-            <h1>🤟 Criar conta</h1>
+            <h1> Criar conta</h1>
 
             <p>Comece sua jornada de aprendizado em Libras.</p>
 
@@ -49,6 +55,11 @@
                 <button type="submit">
                     Criar conta
                 </button>
+            {% if erro %}
+           <div class="mensagem-erro">
+           {{ erro }}
+           </div>
+           {% endif %}
 
             </form>
 

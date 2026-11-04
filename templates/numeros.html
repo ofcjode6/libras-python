@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Números em Libras | Aprendendo Libras</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/estilo.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="container pagina-alfabeto">
+
+        <header class="cabecalho-alfabeto">
+            <h1>Números em Libras</h1>
+
+            <p>
+                Explore os números de 0 a 10 e aprenda suas
+                configurações de mão em Libras.
+            </p>
+        </header>
+
+        <section aria-label="Números em Libras">
+
+            <div class="titulo-carrossel">
+                <h2>Escolha um número</h2>
+                <span>Deslize para os lados →</span>
+            </div>
+
+            <div class="controles-carrossel">
+                <button
+                    type="button"
+                    class="botao-navegacao"
+                    onclick="moverCarrossel(-1)"
+                    aria-label="Números anteriores"
+                >←</button>
+
+                <button
+                    type="button"
+                    class="botao-navegacao"
+                    onclick="moverCarrossel(1)"
+                    aria-label="Próximos números"
+                >→</button>
+            </div>
+
+            <div
+                id="carrossel-numeros"
+                class="carrossel-alfabeto"
+                aria-label="Carrossel de números"
+            >
+            </div>
+
+        </section>
+
+        <section
+            id="area-estudo"
+            class="area-estudo"
+            hidden
+        >
+            <div class="cabecalho-estudo">
+                <div>
+                    <span class="etiqueta-estudo">MODO DE ESTUDO</span>
+                    <h2 id="titulo-numero">Número 0</h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="botao-fechar"
+                    onclick="fecharEstudo()"
+                >
+                    Fechar ✕
+                </button>
+            </div>
+
+            <p id="texto-numero">
+                Observe a imagem e assista ao vídeo para aprender
+                a representação do número em Libras.
+            </p>
+
+            <div class="imagem-estudo-container">
+                <img
+                    id="imagem-numero"
+                    class="imagem-estudo"
+                    alt="Sinal do número em Libras"
+                    hidden
+                >
+
+            </div>
+
+            <div class="video-container">
+                <video
+                    id="video-numero"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    hidden
+                >
+                    Seu navegador não suporta a reprodução de vídeo.
+                </video>
+
+                <p id="aviso-video" class="aviso-video">
+                    O vídeo deste número ainda não foi adicionado.
+                    Ele estará disponível quando o grupo colocar
+                    o arquivo correspondente na pasta de vídeos.
+                </p>
+            </div>
+
+            <p class="dica-estudo">
+                Dica: observe a configuração da mão, assista com
+                atenção e tente reproduzir o movimento.
+            </p>
+        </section>
+
+        <a class="voltar-conteudos" href="{{ url_for('conteudos') }}">
+            ← Voltar aos conteúdos
+        </a>
+
+    </main>
+
+    <script>
+        const numeros = Array.from(
+            { length: 11 },
+            (_, indice) => indice
+        );
+
+        const carrossel = document.getElementById("carrossel-numeros");
+        const areaEstudo = document.getElementById("area-estudo");
+        const tituloNumero = document.getElementById("titulo-numero");
+        const textoNumero = document.getElementById("texto-numero");
+
+        const imagemNumero = document.getElementById("imagem-numero");
+        const avisoImagem = document.getElementById("aviso-imagem");
+
+        const videoNumero = document.getElementById("video-numero");
+        const avisoVideo = document.getElementById("aviso-video");
+
+        // Cria os cartões de 0 até 10.
+        numeros.forEach(function(numero) {
+
+            const cartao = document.createElement("article");
+            cartao.className = "cartao-letra";
+
+            const imagem = document.createElement("img");
+
+            imagem.src =
+                "{{ url_for('static', filename='numeros/imagens/') }}" +
+                numero + ".jpg";
+
+            imagem.alt = "Sinal do número " + numero + " em Libras";
+            imagem.className = "imagem-cartao-letra";
+
+            imagem.onerror = function() {
+                imagem.hidden = true;
+            };
+
+            const identificacao = document.createElement("span");
+            identificacao.className = "identificacao-letra";
+            identificacao.textContent = "Número " + numero;
+
+            const botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "botao-estudar";
+            botao.textContent = "Estudar número " + numero;
+
+            botao.addEventListener("click", function() {
+                mostrarNumero(numero);
+            });
+
+            cartao.appendChild(imagem);
+            cartao.appendChild(identificacao);
+            cartao.appendChild(botao);
+
+            carrossel.appendChild(cartao);
+        });
+
+        // Movimenta o carrossel.
+        function moverCarrossel(direcao) {
+
+            const cartao = carrossel.querySelector(".cartao-letra");
+
+            if (!cartao) return;
+
+            const distancia =
+                cartao.getBoundingClientRect().width + 18;
+
+            carrossel.scrollBy({
+                left: distancia * direcao,
+                behavior: "smooth"
+            });
+        }
+
+        // Abre a área de estudo do número selecionado.
+        function mostrarNumero(numero) {
+
+            tituloNumero.textContent =
+                "Estudando o número " + numero;
+
+            textoNumero.textContent =
+                "Observe a imagem e o vídeo do número " +
+                numero + " em Libras e pratique a configuração da mão.";
+
+            
+
+            // Limpa o vídeo anterior.
+            videoNumero.pause();
+            videoNumero.removeAttribute("src");
+            videoNumero.load();
+
+            videoNumero.hidden = false;
+            avisoVideo.hidden = true;
+
+            videoNumero.onerror = function() {
+                videoNumero.hidden = true;
+                avisoVideo.hidden = false;
+            };
+
+            videoNumero.src =
+                "{{ url_for('static', filename='numeros/videos/') }}" +
+                numero + ".mp4";
+
+            videoNumero.muted = true;
+            videoNumero.load();
+
+            areaEstudo.hidden = false;
+
+            areaEstudo.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+        // Fecha a área de estudo.
+        function fecharEstudo() {
+
+            videoNumero.pause();
+            areaEstudo.hidden = true;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking de participantes</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+    <main class="ranking-container">
+        <section class="ranking-card">
+
+            <h1>🏆 Ranking de participantes</h1>
+
+            <p class="ranking-descricao">
+                Confira os melhores resultados nos exercícios de Libras.
+            </p>
+
+            {% if participantes %}
+
+                <div class="ranking-lista">
+
+                    {% for participante in participantes %}
+                        <article class="ranking-item">
+
+                            <div class="ranking-posicao">
+                                {% if loop.index == 1 %}
+                                    🏆
+                                {% elif loop.index == 2 %}
+                                    🥈
+                                {% elif loop.index == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ loop.index }}º
+                                {% endif %}
+                            </div>
+
+                            <div class="ranking-informacoes">
+                                <h2>{{ participante[0] }}</h2>
+
+                            </div>
+
+                            <div class="ranking-pontuacao">
+                                <strong>
+                                    {{ participante[1] }}/{{ participante[2] }}
+                                </strong>
+                                <span>melhor resultado</span>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="ranking-vazio">
+                    <h2>Ainda não há resultados</h2>
+                    <p>
+                        Conclua um quiz para aparecer no ranking.
+                    </p>
+                </div>
+
+            {% endif %}
+
+            <a href="{{ url_for('home') }}"
+               class="botao-ranking">
+                Voltar ao início
+            </a>
+
+        </section>
+    </main>
+
+</body>
+</html>

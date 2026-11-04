@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz - Aprendendo Libras</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+
+<body class="quiz-body">
+
+    <main class="quiz-container">
+
+        <section class="quiz-card">
+
+            <header class="quiz-header">
+                <a href="{{ url_for('home') }}" class="quiz-voltar">
+                    ← Voltar ao início
+                </a>
+
+                <span class="quiz-icone">📝</span>
+
+                <h1>Quiz de Libras</h1>
+
+                <p>
+                    Teste seus conhecimentos sobre o alfabeto.
+                </p>
+            </header>
+
+            <div class="quiz-progresso">
+                <div class="quiz-progresso-info">
+                    <span id="numero-pergunta">
+                        Pergunta 1 de {{ perguntas|length }}
+                    </span>
+
+                    <span id="porcentagem">0% concluído</span>
+                </div>
+
+                <div class="quiz-barra">
+                    <div id="quiz-barra-preenchimento"></div>
+                </div>
+            </div>
+
+            <form method="POST"
+                  action="{{ url_for('responder_quiz') }}"
+                  id="form-quiz">
+
+                {% for pergunta in perguntas %}
+
+                <section class="quiz-pergunta"
+                         data-indice="{{ loop.index0 }}"
+                         {% if not loop.first %}hidden{% endif %}>
+
+                    <span class="quiz-etiqueta">
+                        QUESTÃO {{ loop.index }}
+                    </span>
+
+                    <h2>{{ pergunta.pergunta }}</h2>
+
+                    <!-- EXIBIÇÃO DA MÍDIA -->
+
+                    <div class="quiz-midia">
+
+                        {% if pergunta.tipo == "imagem" %}
+
+                            <img
+                                src="{{ url_for('static', filename=pergunta.midia) }}"
+                                alt="Sinal de Libras apresentado na questão {{ loop.index }}"
+                                class="quiz-imagem"
+                            >
+
+                        {% elif pergunta.tipo == "video" %}
+
+                            <video
+                                class="quiz-video"
+                                controls
+                                preload="metadata"
+                                playsinline
+                            >
+                                <source
+                                    src="{{ url_for('static', filename=pergunta.midia) }}"
+                                    type="video/mp4"
+                                >
+
+                                Seu navegador não suporta vídeos.
+                            </video>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- ALTERNATIVAS -->
+
+                    <div class="quiz-opcoes">
+
+                        {% for opcao in pergunta.opcoes %}
+
+                        <label class="quiz-opcao">
+
+                            <input
+                                type="radio"
+                                name="resposta_{{ pergunta.id }}"
+                                value="{{ opcao }}"
+                            >
+
+                            <span class="quiz-letra">
+                                {{ ['A', 'B', 'C', 'D'][loop.index0] }}
+                            </span>
+
+                            <span class="quiz-texto">
+                                {{ opcao }}
+                            </span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+                {% endfor %}
+
+                <!-- NAVEGAÇÃO -->
+
+                <div class="quiz-navegacao">
+
+                    <button type="button"
+                            id="botao-anterior"
+                            class="quiz-botao quiz-botao-secundario"
+                            disabled>
+                         Anterior
+                    </button>
+
+                    <button type="button"
+                            id="botao-proximo"
+                            class="quiz-botao">
+                        Próxima 
+                    </button>
+
+                    <button type="submit"
+                            id="botao-finalizar"
+                            class="quiz-botao"
+                            hidden>
+                        Finalizar quiz
+                    </button>
+
+                </div>
+
+                <p id="aviso-resposta" class="quiz-aviso" hidden>
+                    Selecione uma alternativa para continuar.
+                </p>
+
+            </form>
+
+            <footer class="quiz-footer">
+                Aprendendo Libras com Tecnologia 🤟
+            </footer>
+
+        </section>
+
+    </main>
+
+    <script>
+        const perguntas = document.querySelectorAll(".quiz-pergunta");
+
+        const botaoAnterior =
+            document.getElementById("botao-anterior");
+
+        const botaoProximo =
+            document.getElementById("botao-proximo");
+
+        const botaoFinalizar =
+            document.getElementById("botao-finalizar");
+
+        const numeroPergunta =
+            document.getElementById("numero-pergunta");
+
+        const porcentagem =
+            document.getElementById("porcentagem");
+
+        const barra =
+            document.getElementById("quiz-barra-preenchimento");
+
+        const aviso =
+            document.getElementById("aviso-resposta");
+
+        const formulario =
+            document.getElementById("form-quiz");
+
+        let perguntaAtual = 0;
+
+        function atualizarQuiz() {
+
+            perguntas.forEach((pergunta, indice) => {
+
+                pergunta.hidden = indice !== perguntaAtual;
+
+                // Pausa os vídeos das perguntas que não estão visíveis.
+                if (indice !== perguntaAtual) {
+
+                    const video = pergunta.querySelector("video");
+
+                    if (video) {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                }
+            });
+
+            const total = perguntas.length;
+
+            const progresso = Math.round(
+                ((perguntaAtual + 1) / total) * 100
+            );
+
+            numeroPergunta.textContent =
+                `Pergunta ${perguntaAtual + 1} de ${total}`;
+
+            porcentagem.textContent =
+                `${progresso}% concluído`;
+
+            barra.style.width = `${progresso}%`;
+
+            botaoAnterior.disabled = perguntaAtual === 0;
+
+            const ultimaPergunta =
+                perguntaAtual === total - 1;
+
+            botaoProximo.hidden = ultimaPergunta;
+
+            botaoFinalizar.hidden = !ultimaPergunta;
+
+            aviso.hidden = true;
+        }
+
+        function respostaSelecionada() {
+
+            const pergunta = perguntas[perguntaAtual];
+
+            return pergunta.querySelector(
+                'input[type="radio"]:checked'
+            );
+        }
+
+        botaoProximo.addEventListener("click", () => {
+
+            if (!respostaSelecionada()) {
+
+                aviso.hidden = false;
+                return;
+
+            }
+
+            if (perguntaAtual < perguntas.length - 1) {
+
+                perguntaAtual++;
+
+                atualizarQuiz();
+
+            }
+
+        });
+
+        botaoAnterior.addEventListener("click", () => {
+
+            if (perguntaAtual > 0) {
+
+                perguntaAtual--;
+
+                atualizarQuiz();
+
+            }
+
+        });
+
+        formulario.addEventListener("submit", (evento) => {
+
+            if (!respostaSelecionada()) {
+
+                evento.preventDefault();
+
+                aviso.hidden = false;
+
+            }
+
+        });
+
+        atualizarQuiz();
+
+    </script>
+
+</body>
+</html>

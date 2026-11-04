@@ -14,8 +14,14 @@
     <main class="login-container">
 
         <section class="login-card">
+            <div class="login-logo">
+    <img
+        src="{{ url_for('static', filename='logo_projeto.png') }}"
+        alt="Logo do projeto Aprendendo Libras"
+    >
+</div>
 
-            <h1> Aprendendo Libras/ projeto faci</h1>
+            <h1> Aprendendo Libras</h1>
 
             <p>Aprenda Libras de forma interativa.</p>
 
@@ -38,11 +44,19 @@
                     placeholder="Digite sua senha"
                     required
                 >
-
+                {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+        {% for categoria, mensagem in mensagens %}
+            <div class="mensagem-erro">
+                {{ mensagem }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
                 <button type="submit">
                     Entrar
                 </button>
-
+               
             </form>
 
             <p class="cadastro">

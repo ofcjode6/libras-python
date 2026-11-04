@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Administrativo</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <header class="admin-header">
+            <div>
+                <h1>Painel Administrativo</h1>
+                <p>Bem-vindo, {{ session["nome_usuario"] }}!</p>
+            </div>
+
+            <a href="{{ url_for('home') }}" class="btn-voltar">
+                Voltar ao início
+            </a>
+        </header>
+
+        <main>
+
+            <section class="secao">
+                <h2>Visão geral</h2>
+                <p class="descricao">
+                    Acompanhe os dados gerais de utilização da plataforma.
+                </p>
+
+                <div class="cards-container">
+
+                    <div class="card">
+                        <span class="card-titulo">Alunos cadastrados</span>
+                        <strong>{{ dados.total_alunos }}</strong>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-titulo">Alunos participantes</span>
+                        <strong>{{ dados.alunos_participantes }}</strong>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-titulo">Total de tentativas</span>
+                        <strong>{{ dados.total_tentativas }}</strong>
+                    </div>
+
+                    <div class="card">
+                        <span class="card-titulo">Média de aproveitamento</span>
+                        <strong>
+                            {{ "%.2f"|format(dados.media_aproveitamento) }}%
+                        </strong>
+                    </div>
+
+                </div>
+            </section>
+            <section class="secao">
+                 <h2>Distribuição das pontuações</h2>
+
+                <p>
+                   Visualize a quantidade de tentativas em cada faixa
+                   de aproveitamento dos quizzes.
+                  </p>
+
+                       <div class="grafico-container">
+                     <canvas id="graficoPontuacoes"></canvas>
+                      </div>
+            </section>
+
+            <section class="secao">
+                <h2>Desempenho dos alunos</h2>
+                <p class="descricao">
+                    Consulte os resultados individuais dos participantes.
+                </p>
+
+                <div class="tabela-container">
+
+                    {% if dados.desempenho_alunos %}
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Melhor pontuação</th>
+                                <th>Tentativas</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for aluno in dados.desempenho_alunos %}
+                            <tr>
+                                <td>{{ aluno[0] }}</td>
+                                <td>{{ aluno[1] }}/{{ aluno[2] }}</td>
+                                <td>{{ aluno[3] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% else %}
+
+                    <p class="sem-dados">
+                        Nenhum aluno realizou atividades ainda.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+            </section>
+
+            <section class="secao">
+                <h2>Questões com mais erros</h2>
+
+                   <p class="descricao">
+                    Identifique as questões que apresentam maior dificuldade
+                     para os alunos durante os quizzes.
+                    </p>
+
+                 <div class="grafico-container">
+               <canvas id="graficoErros"></canvas>
+                 </div>
+                </section>
+
+            <section class="secao">
+                 <h2>Evolução do desempenho</h2>
+
+                   <p>
+                          Acompanhe a evolução do aproveitamento médio dos alunos
+                          conforme realizam novas tentativas nos quizzes.
+                  </p>
+
+              <div class="grafico-container">
+             <canvas id="graficoEvolucao"></canvas>
+             </div>
+            </section>
+
+        </main>
+
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="dados-evolucao" type="application/json">
+    {{ dados.evolucao_desempenho | tojson }}
+</script>
+
+
+<script>
+    const evolucao = JSON.parse(
+        document.getElementById('dados-evolucao').textContent
+    );
+
+    const tentativas = evolucao.map(item => item[0]);
+    const medias = evolucao.map(item => item[1]);
+    console.log("Dados da evolução:", evolucao);
+    console.log("Tentativas:", tentativas);
+    console.log("Médias:", medias);
+
+    const contextoEvolucao = document
+        .getElementById('graficoEvolucao')
+        .getContext('2d');
+
+    new Chart(contextoEvolucao, {
+        type: 'line',
+
+        data: {
+            labels: tentativas.map(numero => numero + 'ª tentativa'),
+
+            datasets: [{
+                label: 'Aproveitamento médio (%)',
+                data: medias,
+                borderColor: '#397fc5',
+                backgroundColor: 'rgba(121, 177, 240, 0.2)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Aproveitamento médio (%)'
+                    }
+                },
+
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Número de tentativas'
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="dados-erros" type="application/json">
+    {{ dados.questoes_com_mais_erros | tojson }}
+</script>
+<script>
+    const questoesErros = JSON.parse(
+        document.getElementById('dados-erros').textContent
+    );
+
+    // Organiza as questões pelas que possuem mais erros
+    const questoesOrdenadas = [...questoesErros]
+        .sort((a, b) => b[2] - a[2])
+        .slice(0, 10);
+
+    const identificadores = questoesOrdenadas.map(
+        item => item[0]
+    );
+
+    const quantidadeErros = questoesOrdenadas.map(
+        item => item[2]
+    );
+
+    const contextoErros = document
+        .getElementById('graficoErros')
+        .getContext('2d');
+
+    new Chart(contextoErros, {
+        type: 'bar',
+
+        data: {
+            labels: identificadores,
+
+            datasets: [{
+                label: 'Quantidade de erros',
+                data: quantidadeErros,
+                backgroundColor: '#79b1f0',
+                borderColor: '#397fc5',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    },
+                    title: {
+                        display: true,
+                        text: 'Quantidade de erros'
+                    }
+                },
+
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Identificação da questão'
+                    }
+                }
+            },
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="dados-distribuicao" type="application/json">
+    {{ dados.distribuicao_pontuacoes | tojson }}
+</script>
+<script>
+    const distribuicao = JSON.parse(
+    document.getElementById('dados-distribuicao').textContent
+);
+    const labels = distribuicao.map(item => item[0]);
+    const valores = distribuicao.map(item => item[1]);
+
+    const contexto = document
+        .getElementById('graficoPontuacoes')
+        .getContext('2d');
+
+    new Chart(contexto, {
+        type: 'bar',
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: 'Quantidade de tentativas',
+                data: valores,
+                backgroundColor: '#79b1f0',
+                borderColor: '#397fc5',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    },
+                    title: {
+                        display: true,
+                        text: 'Quantidade de tentativas'
+                    }
+                },
+
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Faixa de aproveitamento'
+                    }
+                }
+            },
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

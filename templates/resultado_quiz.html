@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado do Quiz - Libras</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <main class="resultado-container">
+        <section class="resultado-card">
+            <h1>Resultado do Quiz</h1>
+
+            <p>Parabéns por concluir o exercício!</p>
+
+            <div class="pontuacao">
+                <strong>{{ pontuacao }} / {{ total }}</strong>
+                <p>Respostas corretas</p>
+            </div>
+
+            <p>
+                Você acertou {{ pontuacao }} de {{ total }} perguntas.
+            </p>
+
+            <a href="{{ url_for('quiz') }}" class="botao-resultado">
+                Tentar novamente
+            </a>
+
+            <a href="{{ url_for('home') }}" class="botao-resultado">
+                Voltar ao início
+            </a>
+        </section>
+    </main>
+</body>
+</html>
