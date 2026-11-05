@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
+import os
 from database.database import (
     criar_tabela_usuario,
     criar_tabela_resultados,
     criar_tabela_tentativas,
-    conectar
+    conectar,
+    parametro_sql
 )
 from database.database import obter_dados_administrativos
 from dados.perguntas import perguntas
@@ -14,7 +16,7 @@ from dados.perguntas import perguntas
 
 app = Flask(__name__)
 
-app.secret_key = "chave-do-projeto-aprendendo-libras"
+app.secret_key = os.environ.get("SECRET_KEY", "chave-temporaria-desenvolvimento")
 
 
 criar_tabela_usuario()
@@ -37,13 +39,13 @@ def login():
     cursor = conexao.cursor()
 
     cursor.execute(
-        """
-        SELECT id, nome_usuario, senha_hash, tipo
-        FROM usuario
-        WHERE nome_usuario = ?
-        """,
-        (nome_usuario,)
-    )
+    f"""
+    SELECT id, nome_usuario, senha_hash, tipo
+    FROM usuario
+    WHERE nome_usuario = {parametro_sql()}
+    """,
+    (nome_usuario,)
+)
 
     usuario = cursor.fetchone()
 
@@ -90,16 +92,19 @@ def cadastrar():
 
     try:
         cursor.execute(
-            """
-            INSERT INTO usuario (nome_usuario, senha_hash)
-            VALUES (?, ?)
-            """,
-            (nome_usuario, senha_hash)
-        )
+        f"""
+        INSERT INTO usuario (nome_usuario, senha_hash)
+        VALUES ({parametro_sql()}, {parametro_sql()})
+        """,
+        (nome_usuario, senha_hash)
+    )
 
         conexao.commit()
 
-    except sqlite3.IntegrityError:
+    except Exception as erro:
+        conexao.rollback()
+
+    if "unique" in str(erro).lower() or "duplicate" in str(erro).lower():
         conexao.close()
 
         return render_template(
@@ -108,6 +113,7 @@ def cadastrar():
         )
 
     conexao.close()
+    raise erro
 
     return redirect(url_for("inicio"))
 
@@ -180,14 +186,14 @@ def historico():
     cursor = conexao.cursor()
 
     cursor.execute(
-        """
-        SELECT id, pontuacao, total_perguntas, data_tentativa
-        FROM tentativa_quiz
-        WHERE usuario_id = ?
-        ORDER BY data_tentativa DESC, id DESC
-        """,
-        (session["usuario_id"],)
-    )
+    f"""
+    SELECT id, pontuacao, total_perguntas, data_tentativa
+    FROM tentativa_quiz
+    WHERE usuario_id = {parametro_sql()}
+    ORDER BY data_tentativa DESC, id DESC
+    """,
+    (session["usuario_id"],)
+)
 
     tentativas = cursor.fetchall()
     conexao.close()
@@ -255,29 +261,37 @@ def responder_quiz():
             pontuacao += 1
 
         cursor.execute(
-            """
-            INSERT INTO resultado_quiz
-            (usuario_id, letra_pergunta, resposta_escolhida, resposta_correta)
-            VALUES (?, ?, ?, ?)
-            """,
-            (
-                usuario_id,
-                identificador,
-                resposta,
-                1 if correta else 0
-            )
-        )
+    f"""
+    INSERT INTO resultado_quiz
+    (usuario_id, letra_pergunta, resposta_escolhida, resposta_correta)
+    VALUES (
+        {parametro_sql()},
+        {parametro_sql()},
+        {parametro_sql()},
+        {parametro_sql()}
+    )
+    """,
+    (
+        usuario_id,
+        identificador,
+        resposta,
+        1 if correta else 0
+    )
+)
 
     # Registrar apenas uma tentativa ao finalizar o quiz
     cursor.execute(
-        """
-        INSERT INTO tentativa_quiz
-        (usuario_id, pontuacao, total_perguntas)
-        VALUES (?, ?, ?)
-        """,
-        (usuario_id, pontuacao, total)
+    f"""
+    INSERT INTO tentativa_quiz
+    (usuario_id, pontuacao, total_perguntas)
+    VALUES (
+        {parametro_sql()},
+        {parametro_sql()},
+        {parametro_sql()}
     )
-
+    """,
+    (usuario_id, pontuacao, total)
+)
     conexao.commit()
     conexao.close()
 

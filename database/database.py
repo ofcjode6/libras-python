@@ -1,17 +1,41 @@
+import os
 import sqlite3
+import psycopg
+from psycopg.rows import dict_row
 
 
 def conectar():
-    conexao = sqlite3.connect("database.db")
+
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        print("CONEXÃO: PostgreSQL")
+        conexao = psycopg.connect(database_url)
+    else:
+        print("CONEXÃO: SQLite")
+        conexao = sqlite3.connect("database.db")
+
     return conexao
 
 
+def parametro_sql():
+    if os.environ.get("DATABASE_URL"):
+        return "%s"
+    return "?"
+    
 def criar_tabela_usuario():
     conexao = conectar()
-
     cursor = conexao.cursor()
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS usuario (
+            id SERIAL PRIMARY KEY,
+            nome_usuario VARCHAR(100) NOT NULL UNIQUE,
+            senha_hash TEXT NOT NULL,
+            tipo VARCHAR(20) NOT NULL DEFAULT 'aluno',
+            data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """ if os.environ.get("DATABASE_URL") else """
         CREATE TABLE IF NOT EXISTS usuario (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_usuario TEXT NOT NULL UNIQUE,
@@ -24,12 +48,22 @@ def criar_tabela_usuario():
     conexao.commit()
     conexao.close()
 
-    
+
 def criar_tabela_resultados():
     conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS resultado_quiz (
+            id SERIAL PRIMARY KEY,
+            usuario_id INTEGER NOT NULL,
+            letra_pergunta TEXT NOT NULL,
+            resposta_escolhida TEXT NOT NULL,
+            resposta_correta INTEGER NOT NULL,
+            data_resposta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+        )
+    """ if os.environ.get("DATABASE_URL") else """
         CREATE TABLE IF NOT EXISTS resultado_quiz (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             usuario_id INTEGER NOT NULL,
@@ -44,12 +78,20 @@ def criar_tabela_resultados():
     conexao.commit()
     conexao.close()
 
-
 def criar_tabela_tentativas():
     conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS tentativa_quiz (
+            id SERIAL PRIMARY KEY,
+            usuario_id INTEGER NOT NULL,
+            pontuacao INTEGER NOT NULL,
+            total_perguntas INTEGER NOT NULL,
+            data_tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+        )
+    """ if os.environ.get("DATABASE_URL") else """
         CREATE TABLE IF NOT EXISTS tentativa_quiz (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             usuario_id INTEGER NOT NULL,
@@ -62,7 +104,6 @@ def criar_tabela_tentativas():
 
     conexao.commit()
     conexao.close()
-
 
 def obter_dados_administrativos():
     conexao = conectar()
