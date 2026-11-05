@@ -79,6 +79,7 @@ def cadastro():
     return render_template("cadastro.html")
 
 
+
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
 
@@ -92,30 +93,31 @@ def cadastrar():
 
     try:
         cursor.execute(
-        f"""
-        INSERT INTO usuario (nome_usuario, senha_hash)
-        VALUES ({parametro_sql()}, {parametro_sql()})
-        """,
-        (nome_usuario, senha_hash)
-    )
+            f"""
+            INSERT INTO usuario (nome_usuario, senha_hash)
+            VALUES ({parametro_sql()}, {parametro_sql()})
+            """,
+            (nome_usuario, senha_hash)
+        )
 
         conexao.commit()
 
     except Exception as erro:
         conexao.rollback()
-
-    if "unique" in str(erro).lower() or "duplicate" in str(erro).lower():
         conexao.close()
 
-        return render_template(
-            "cadastro.html",
-            erro="Esse nome de usuário já está cadastrado!"
-        )
+        if "unique" in str(erro).lower() or "duplicate" in str(erro).lower():
+            return render_template(
+                "cadastro.html",
+                erro="Esse nome de usuário já está cadastrado!"
+            )
+
+        raise erro
 
     conexao.close()
-    raise erro
 
     return redirect(url_for("inicio"))
+
 
 @app.route("/home")
 def home():
